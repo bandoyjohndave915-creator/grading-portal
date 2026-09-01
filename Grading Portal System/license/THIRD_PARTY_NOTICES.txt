@@ -1,0 +1,19 @@
+THIRD-PARTY NOTICES
+
+This application bundles the following third-party software. License texts are provided in this folder.
+
+1) Python 3.11.2 (CPython)
+   Copyright (c) 2001-2023 Python Software Foundation.
+   License: see "Python-3.11.2-LICENSE.txt"
+
+2) pywebview
+   Copyright (c) 2014-2017, Roman Sirokov.
+   License: BSD 3-Clause, see "pywebview-LICENSE.txt"
+
+3) Beautifulsoup4
+   License: see "Beautifulsoup4-LICENSE.txt"
+
+Build tooling note (not bundled at runtime):
+- This app uses PyInstaller to build your desktop application, PyInstaller's license does not require that you
+  include its license text or attribution in your distributed application, because PyInstaller is
+  a build-time tool and you are not redistributing PyInstaller itself.

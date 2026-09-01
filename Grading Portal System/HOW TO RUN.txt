@@ -1,0 +1,81 @@
+============================================================
+         GRADING PORTAL SYSTEM — HOW TO RUN
+         School Grade Management System
+============================================================
+
+REQUIREMENTS:
+  • Internet connection (REQUIRED)
+  • Computer with Windows 10 or 11
+  • Any modern web browser (Google Chrome or Microsoft Edge
+    is recommended)
+
+------------------------------------------------------------
+
+STEPS TO RUN THE SYSTEM:
+
+  1. Make sure your computer is connected to the INTERNET.
+
+  2. Double-click the file named "index.exe"
+
+  3. The Grading Portal System will automatically open
+     in your web browser.
+
+  4. Login using your credentials:
+
+       Admin Account:
+         Username : admin001
+         Password : admin002
+
+       Teacher Account:
+         Username : 1111111
+         Password : JAnn1111
+
+       Student Account:
+         Username : 483729105614
+         Password : Ereyes1111
+
+------------------------------------------------------------
+
+IMPORTANT NOTES:
+
+  • An ACTIVE INTERNET CONNECTION is required at all times
+    to use the system, as it is hosted online.
+
+  • If the system does not open automatically, you can
+    manually open your browser and go to:
+
+    https://grading-portal-system.vercel.app/
+
+  • If you see a blank page or error, please check your
+    internet connection and try again.
+
+  • If the system loads but LOGIN does not work or shows
+    a connection error, the server may be temporarily
+    sleeping or down. Please contact the developer to
+    restart the server before trying again.
+
+       CONTACT THE DEVELOPER:
+         Name  : John Dave Bansag
+         Email : BansagJohnDave915@gmail.com
+         Phone : (+63)9311161546
+
+    Allow a few minutes after contacting the developer
+    before trying to log in again.
+
+  • Feel free to explore the files inside this folder.
+    The complete source code is also safely backed up
+    on GitHub, so nothing will be permanently lost.
+
+------------------------------------------------------------
+
+CONTENTS OF THIS CD:
+
+  • index.exe              — System Launcher
+  • Final Thesis/          — Complete Source Code
+  • Research Document      — Final Research Paper
+  • Presentation.pptx      — Defense Presentation
+
+------------------------------------------------------------
+
+         Developed as a Capstone Project
+============================================================

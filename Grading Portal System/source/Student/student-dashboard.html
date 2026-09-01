@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard — Grading Portal</title>
+  <link rel="stylesheet" href="../CSS/student.css">
+  <link rel="icon" type="image/png" href="/assets/image/logo.png">
+  <style>
+
+    /* ==============================
+       PROFILE CARD
+    ============================== */
+
+    .profile-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.07);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-left: 5px solid #800000;
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #800000;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .profile-info h3 {
+      color: #800000;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .profile-info p {
+      color: gray;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    body.dark .profile-card    { background: #2c2c2c; }
+    body.dark .profile-info h3 { color: #ff6666; }
+
+    /* ==============================
+       REPORT CARD WRAPPER
+    ============================== */
+
+
+      .report-card-wrapper {
+        background: white;
+        border-radius: 14px;
+        padding: 32px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        width: 700px;
+        margin: 0 0 24px;
+      }
+
+    body.dark .report-card-wrapper { background: #2c2c2c; }
+
+    .report-card-title {
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: #800000;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .report-card-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .report-card-info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .report-card-info-label {
+      font-weight: bold;
+      color: #555;
+      min-width: 100px;
+    }
+
+    .report-card-info-value {
+      border-bottom: 1px solid #ccc;
+      flex: 1;
+      padding-bottom: 2px;
+      color: #333;
+    }
+
+    body.dark .report-card-info-value { border-color: #555; color: #ddd; }
+
+    /* ==============================
+       GRADE TABLE
+    ============================== */
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+
+    .report-table thead tr {
+      background: #800000;
+      color: white;
+    }
+
+    .report-table th {
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .report-table th:first-child { text-align: left; }
+
+    .report-table td {
+      padding: 9px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    .report-table td:first-child { text-align: left; font-weight: 500; }
+
+    .report-table tr:nth-child(even) { background: #fff5f5; }
+
+    body.dark .report-table tr:nth-child(even) { background: #3a2020; }
+    body.dark .report-table td { border-color: #444; }
+
+    .report-table .final-row {
+      background: #f9f9f9;
+      font-weight: bold;
+      border-top: 2px solid #800000;
+    }
+
+    body.dark .report-table .final-row { background: #333; }
+
+    /* grade color helpers */
+    .grade-pass { color: #007700; font-weight: bold; }
+    .grade-fail { color: #cc0000; font-weight: bold; }
+    .grade-none { color: #aaa; }
+
+    /* ==============================
+       GPA SCALE
+    ============================== */
+
+    .gpa-scale {
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding-top: 16px;
+    }
+
+    .gpa-scale h4 {
+      text-align: center;
+      color: #800000;
+      font-size: 14px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .gpa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+    }
+
+    .gpa-item {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid #800000;
+    }
+
+    .gpa-item.fail-item { border-left-color: #cc0000; }
+
+    body.dark .gpa-item { background: #333; }
+
+    .gpa-range { font-weight: bold; color: #800000; }
+    .gpa-item.fail-item .gpa-range { color: #cc0000; }
+    .gpa-desc  { color: gray; font-size: 11px; flex: 1; padding: 0 8px; }
+    .gpa-remarks { font-weight: bold; font-size: 11px; }
+
+    /* ==============================
+       YEAR SELECTOR
+    ============================== */
+
+    .year-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .year-selector label {
+      font-weight: bold;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .year-selector select {
+      padding: 9px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .year-selector select:focus { border-color: #800000; }
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+
+    @media (max-width: 768px) {
+      .profile-card        { flex-direction: column; text-align: center; }
+      .report-card-info    { grid-template-columns: 1fr; }
+      .report-card-wrapper { padding: 20px; }
+      .gpa-grid            { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Sidebar overlay for mobile (same pattern as teacher) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="container">
+
+  <!-- ==============================
+       SIDEBAR
+  ============================== -->
+  <div class="sidebar">
+
+    <button class="menu-btn"
+      onclick="toggleSidebar()"
+      style="color:white;">≡</button>
+
+    <br><br>
+
+    <!-- SIDEBAR PROFILE MINI -->
+    <div style="padding:12px 8px; margin-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.2);">
+      <p style="font-size:11px; color:rgba(255,255,255,.6);
+        text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
+        Logged in as
+      </p>
+      <p id="sidebarName"
+        style="color:white; font-weight:bold; font-size:14px;
+          word-break:break-word;">
+        Student
+      </p>
+      <p style="font-size:11px; color:rgba(255,255,255,.5); margin-top:2px;">
+        Role: Student
+      </p>
+    </div>
+
+    <h2 style="margin-top:12px; margin-bottom:16px;">
+      Student Portal
+    </h2>
+
+    <ul>
+
+      <li class="active"
+        onclick="showSection('dashboardSection', this)">
+        &#127968; Dashboard
+      </li>
+
+      <li onclick="showSection('gradesSection', this)">
+        &#128202; My Grades
+      </li>
+
+      <li onclick="showSection('profileSection', this)">
+        &#128100; My Profile
+      </li>
+
+    </ul>
+
+  </div>
+
+
+  <!-- ==============================
+       MAIN
+  ============================== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+      <button class="menu-btn" onclick="toggleSidebar()" style="color:black;">≡</button>
+
+      <h3>Student Dashboard</h3>
+
+      <div class="user-menu">
+
+        <div class="user" onclick="toggleDropdown()">
+          &#127891; <span id="topbarName">Student</span> &#11206;
+        </div>
+
+        <div class="dropdown" id="dropdownMenu">
+          <p onclick="toggleDarkMode()">&#127769; Dark / &#9728;&#65039; Light</p>
+          <hr>
+          <p onclick="logout()">&#128682; Logout</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+
+      <!-- ==============================
+           SECTION: DASHBOARD
+      ============================== -->
+      <div id="dashboardSection" class="section active-section">
+
+        <div class="header">
+          <h2>Dashboard</h2>
+          <p>Welcome back! Here is your academic overview.</p>
+        </div>
+
+        <!-- PROFILE CARD -->
+        <div class="profile-card">
+          <div class="profile-avatar" id="dashAvatar">S</div>
+          <div class="profile-info">
+            <h3 id="dashFullName">Loading...</h3>
+            <p>LRN: <span id="dashLRN">&#8212;</span></p>
+          </div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+          <div class="card">
+            <p>Grade Level</p>
+            <h2 id="dashGradeCard">&#8212;</h2>
+          </div>
+          <div class="card">
+            <p>Section</p>
+            <h2 id="dashSectionCard">&#8212;</h2>
+          </div>
+          <div class="card">
+            <p>School Year</p>
+            <h2 id="dashYearCard" style="font-size:16px;">&#8212;</h2>
+          </div>
+          <div class="card">
+            <p>Active Semester</p>
+            <h2 id="dashQuarterCard">&#8212;</h2>
+          </div>
+        </div>
+        <br>
+        <!-- RECENT GRADES PREVIEW -->
+        <div class="table-box" style="margin-top:4px;">
+
+          <h3 style="padding:16px 16px 0; color:#800000;">
+            &#128202; Recent Approved Grades
+          </h3>
+          <p style="color:gray; font-size:12px; padding:4px 16px 12px;">
+            Latest grades approved by admin
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Semester</th>
+                <th>Score</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="dashRecentGrades">
+              <tr>
+                <td colspan="4"
+                  style="text-align:center; color:gray; padding:20px;">
+                  Loading grades...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="padding:14px 16px; text-align:right;">
+            <button onclick="showSection('gradesSection', null)"
+              style="padding:8px 16px; font-size:13px;">
+              View Full Report Card &#8594;
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: MY GRADES (REPORT CARD)
+      ============================== -->
+      <div id="gradesSection" class="section">
+
+        <div class="header">
+          <h2>My Grades</h2>
+          <p>View your grades per subject and semester for any school year</p>
+        </div>
+
+        <!-- SCHOOL YEAR SELECTOR -->
+        <div class="year-selector">
+          <label>School Year:</label>
+          <select id="gradeYearFilter" onchange="renderReportCard()">
+            <option value="">Loading...</option>
+          </select>
+        </div>
+
+        <!-- REPORT CARD -->
+        <div style="width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;">
+        <div style="width:700px; background:white; border-radius:14px; padding:32px; box-shadow:0 4px 16px rgba(0,0,0,.1); margin:0 0 24px;">
+
+          <div class="report-card-title">Report Card</div>
+
+          <!-- STUDENT INFO -->
+          <div class="report-card-info">
+            <div class="report-card-info-item">
+              <span class="report-card-info-label">Student Name:</span>
+              <span class="report-card-info-value" id="rcName">&#8212;</span>
+            </div>
+            <div class="report-card-info-item">
+              <span class="report-card-info-label">Adviser:</span>
+              <span class="report-card-info-value" id="rcAdviser">&#8212;</span>
+            </div>
+            <div class="report-card-info-item">
+              <span class="report-card-info-label">Grade &amp; Section:</span>
+              <span class="report-card-info-value" id="rcGradeSection">&#8212;</span>
+            </div>
+            <div class="report-card-info-item">
+              <span class="report-card-info-label">School Year:</span>
+              <span class="report-card-info-value" id="rcSchoolYear">&#8212;</span>
+            </div>
+          </div>
+
+          <!-- GRADE TABLE -->
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th style="width:35%;">SUBJECTS</th>
+                <th>S1</th>
+                <th>S2</th>
+                <th>S3</th>
+                <th>S4</th>
+                <th>AVERAGE</th>
+                <th>REMARKS</th>
+              </tr>
+            </thead>
+            <tbody id="reportCardTable">
+              <tr>
+                <td colspan="7"
+                  style="text-align:center; color:gray; padding:20px;">
+                  Select a school year to view your grades
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- GPA SCALE -->
+          <div class="gpa-scale">
+            <h4>GPA Grade Scale</h4>
+            <div class="gpa-grid">
+              <div class="gpa-item">
+                <span class="gpa-range">90&#8211;100</span>
+                <span class="gpa-desc">Outstanding</span>
+                <span class="gpa-remarks grade-pass">Passed</span>
+              </div>
+              <div class="gpa-item">
+                <span class="gpa-range">85&#8211;89</span>
+                <span class="gpa-desc">Very Satisfactory</span>
+                <span class="gpa-remarks grade-pass">Passed</span>
+              </div>
+              <div class="gpa-item">
+                <span class="gpa-range">80&#8211;84</span>
+                <span class="gpa-desc">Satisfactory</span>
+                <span class="gpa-remarks grade-pass">Passed</span>
+              </div>
+              <div class="gpa-item">
+                <span class="gpa-range">75&#8211;79</span>
+                <span class="gpa-desc">Fairly Satisfactory</span>
+                <span class="gpa-remarks grade-pass">Passed</span>
+              </div>
+              <div class="gpa-item fail-item">
+                <span class="gpa-range">Below 75</span>
+                <span class="gpa-desc">Did Not Meet Expectations</span>
+                <span class="gpa-remarks grade-fail">Failed</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+      </div>
+
+
+      <!-- ==============================
+           SECTION: MY PROFILE
+      ============================== -->
+      <div id="profileSection" class="section">
+
+        <div class="header">
+          <h2>My Profile</h2>
+          <p>Your account and enrollment information</p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <p>Full Name</p>
+            <h2 id="profileName" style="font-size:16px;">—</h2>
+          </div>
+          <div class="card">
+            <p>LRN</p>
+            <h2 id="profileLRN" style="font-size:16px;">—</h2>
+          </div>
+          <div class="card">
+            <p>Grade Level</p>
+            <h2 id="profileGrade">—</h2>
+          </div>
+          <div class="card">
+            <p>Section</p>
+            <h2 id="profileSection2">—</h2>
+          </div>
+          <div class="card">
+            <p>Adviser</p>
+            <h2 id="profileAdviser" style="font-size:15px;">—</h2>
+          </div>
+          <div class="card">
+            <p>School Year</p>
+            <h2 id="profileYear" style="font-size:15px;">—</h2>
+          </div>
+          <div class="card">
+            <p>Account Status</p>
+            <h2 id="profileStatus" style="font-size:14px;">—</h2>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div><!-- end .content -->
+  </div><!-- end .main -->
+</div><!-- end .container -->
+
+<script src="../JS/api.js"></script>
+<script src="../JS/student.js"></script>
+
+</body>
+</html>
