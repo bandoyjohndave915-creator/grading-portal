@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard — Grading Portal</title>
+  <link rel="stylesheet" href="../CSS/teacher.css">
+  <link rel="icon" type="image/png" href="/assets/image/logo.png">
+  <style>
+
+    /* ==============================
+       PROFILE CARD
+    ============================== */
+
+    .profile-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.07);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-left: 5px solid #800000;
+    }
+
+    .profile-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #800000;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .profile-info h3 {
+      color: #800000;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .profile-info p {
+      color: gray;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    body.dark .profile-card  { background: #2c2c2c; }
+    body.dark .profile-info h3 { color: #ff6666; }
+
+    /* ==============================
+       QUARTER STATUS BADGES
+    ============================== */
+
+    .q-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      margin: 2px 0;
+    }
+
+    .q-approved { background: #e6ffe6; color: #007700; }
+    .q-pending  { background: #fff8e6; color: #cc8800; }
+    .q-rejected { background: #ffe6e6; color: #cc0000; }
+    .q-locked   { background: #f0f0f0; color: #555;    }
+    .q-none     { background: #f5f5f5; color: #aaa;    }
+
+    /* ==============================
+       UPLOAD FORM
+    ============================== */
+
+    .upload-form {
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.07);
+      max-width: 700px;
+    }
+
+    .upload-form label {
+      display: block;
+      font-weight: bold;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .upload-form select,
+    .upload-form input[type="file"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .upload-form select:focus {
+      border-color: #800000;
+    }
+
+    .upload-note {
+      background: #fff5f5;
+      border: 1px solid #f0c0c0;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    body.dark .upload-form  { background: #2c2c2c; }
+    body.dark .upload-note  { background: #3a2020; border-color: #5a0000; color: #bbb; }
+
+    /* ==============================
+       PREVIEW TABLE
+    ============================== */
+
+    .preview-box {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.07);
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    .row-ok    { background: #f0fff0; }
+    .row-error { background: #fff0f0; }
+
+    body.dark .preview-box { background: #2c2c2c; }
+
+    /* ==============================
+       STATUS COLORS
+    ============================== */
+
+    .status-pending  { color: #cc8800; font-weight: bold; }
+    .status-approved { color: #007700; font-weight: bold; }
+    .status-rejected { color: #cc0000; font-weight: bold; }
+    .status-locked   { color: #555555; font-weight: bold; }
+    .status-draft    { color: #0055cc; font-weight: bold; }
+
+    /* ==============================
+       QUICK ACTIONS
+    ============================== */
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .quick-btn {
+      background: white;
+      border: 1.5px solid #eee;
+      border-radius: 12px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .quick-btn:hover {
+      border-color: #800000;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(128,0,0,.12);
+    }
+
+    .quick-btn .icon { font-size: 26px; margin-bottom: 8px; }
+    .quick-btn p     { font-size: 13px; color: #555; font-weight: bold; margin: 0; }
+
+    body.dark .quick-btn         { background: #2c2c2c; border-color: #444; }
+    body.dark .quick-btn p       { color: #bbb; }
+
+    /* ==============================
+       CLASS / SUBJECT CARDS
+    ============================== */
+
+    .class-card {
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .class-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(128,0,0,.15);
+      border-color: #800000;
+    }
+
+    /* ==============================
+       MESSAGES
+    ============================== */
+
+    .msg-error   { color: #cc0000; font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .msg-success { color: #007700; font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .msg-warn    { color: #cc8800; font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+    /* ==============================
+       GRADES TABLE STYLES
+    ============================== */
+
+    .grade-filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .grade-filters select,
+    .grade-filters input {
+      padding: 9px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .grade-filters select:focus,
+    .grade-filters input:focus {
+      border-color: #800000;
+    }
+
+    /* ==============================
+       RESPONSIVE
+    ============================== */
+
+    @media (max-width: 768px) {
+      .profile-card { flex-direction: column; text-align: center; }
+      .upload-form  { padding: 18px; }
+      .quick-grid   { grid-template-columns: 1fr 1fr; }
+      .grade-filters { flex-direction: column; }
+    }
+
+  </style>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="container">
+
+  <!-- ==============================
+       SIDEBAR
+  ============================== -->
+  <div class="sidebar">
+
+    <button class="menu-btn"
+      onclick="toggleSidebar()"
+      style="color:white;">☰</button>
+
+    <br><br>
+
+    <!-- SIDEBAR PROFILE MINI -->
+    <div style="padding:12px 8px; margin-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.2);">
+      <p style="font-size:11px; color:rgba(255,255,255,.6);
+        text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">
+        Logged in as
+      </p>
+      <p id="sidebarName"
+        style="color:white; font-weight:bold; font-size:14px;
+          word-break:break-word;">
+        Teacher
+      </p>
+      <p style="font-size:11px; color:rgba(255,255,255,.5);">
+        Role: Teacher
+      </p>
+
+    </div>
+
+    <h2 style="margin-top:12px; margin-bottom:16px;">
+      Teacher Portal
+    </h2>
+
+    <ul>
+
+      <li class="active"
+        onclick="showSection('dashboardSection', this)">
+        🏠 Dashboard
+      </li>
+
+      <li onclick="showSection('classesSection', this)">
+        🏫 My Classes
+      </li>
+
+      <li onclick="showSection('subjectsSection', this)">
+        📚 My Subjects
+      </li>
+
+      <li onclick="showSection('gradesSection', this)">
+        📊 Grade Records
+      </li>
+
+      <li onclick="showSection('uploadSection', this)">
+        📤 Upload Grades
+      </li>
+
+      <li onclick="showSection('historySection', this)">
+        🕒 Upload History
+      </li>
+
+      <li onclick="showSection('settingsSection', this)">
+        ⚙️ Settings
+      </li>
+
+    </ul>
+    
+  </div>
+
+
+  <!-- ==============================
+       MAIN
+  ============================== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+      <button class="menu-btn" onclick="toggleSidebar()" style="color: black;">☰</button>
+
+      <h3>Teacher Dashboard</h3>
+
+      <div class="user-menu">
+
+        <div class="user" onclick="toggleDropdown()">
+          👩‍🏫 <span>Teacher</span> ⯆
+        </div>
+
+        <div class="dropdown" id="dropdownMenu">
+          <p onclick="toggleDarkMode()">🌙 Dark / ☀️ Light</p>
+          <hr>
+          <p onclick="logout()">🚪 Logout</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+
+      <!-- ==============================
+           SECTION: DASHBOARD
+      ============================== -->
+      <div id="dashboardSection" class="section active-section">
+
+        <div class="header">
+          <h2>Dashboard</h2>
+          <p>Overview of your handled classes and grade submissions</p>
+        </div>
+
+        <!-- TEACHER PROFILE CARD -->
+        <div class="profile-card">
+          <div class="profile-avatar" id="profileInitial">T</div>
+          <div class="profile-info">
+            <h3 id="profileFullName">Loading...</h3>
+            <p>Role: Teacher &nbsp;|&nbsp; PRC ID: <span id="profilePRCID">—</span></p>
+            <p id="profileAssignments" style="margin-top:4px;">
+              Assignments loading...
+            </p>
+          </div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Assigned Subjects</p>
+            <h2 id="dashAssignedSubjects">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Handled Classes</p>
+            <h2 id="dashHandledClasses">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Pending Uploads</p>
+            <h2 id="dashPendingUploads" style="color:orange;">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Approved Uploads</p>
+            <h2 id="dashApprovedUploads" style="color:green;">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="dashSchoolYear">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active Semester</p>
+            <h2 id="dashActiveQuarter">—</h2>
+          </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div style="margin-top:24px;">
+
+          <h3 style="color:#800000; margin-bottom:4px;">⚡ Quick Actions</h3>
+          <p style="color:gray; font-size:13px; margin-bottom:0;">
+            Jump to any section directly
+          </p>
+
+          <div class="quick-grid">
+
+            <div class="quick-btn"
+              onclick="showSection('classesSection', null)">
+              <div class="icon">🏫</div>
+              <p>View My Classes</p>
+            </div>
+
+            <div class="quick-btn"
+              onclick="showSection('subjectsSection', null)">
+              <div class="icon">📚</div>
+              <p>My Subjects</p>
+            </div>
+
+            <div class="quick-btn"
+              onclick="showSection('uploadSection', null)">
+              <div class="icon">📤</div>
+              <p>Upload Grades</p>
+            </div>
+
+            <div class="quick-btn"
+              onclick="showSection('gradesSection', null)">
+              <div class="icon">📊</div>
+              <p>Grade Records</p>
+            </div>
+
+            <div class="quick-btn"
+              onclick="showSection('historySection', null)">
+              <div class="icon">🕒</div>
+              <p>Upload History</p>
+            </div>
+
+            <div class="quick-btn"
+              onclick="exportGrades()">
+              <div class="icon">⬇</div>
+              <p>Export Grades</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RECENT ACTIVITY TABLE -->
+        <div class="table-box" style="margin-top:24px;">
+
+          <h3 style="padding:16px 16px 0; color:#800000;">
+            🕒 Recent Upload Activity
+          </h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Class</th>
+                <th>Semester</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Admin Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="dashRecentUploads">
+              <tr>
+                <td colspan="6"
+                  style="text-align:center; color:gray; padding:20px;">
+                  Loading recent activity...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: MY CLASSES
+      ============================== -->
+      <div id="classesSection" class="section">
+
+        <div class="header">
+          <h2>My Classes</h2>
+          <p>All grade levels and sections assigned to you this school year</p>
+        </div>
+
+        <!-- CLASS CARDS — rendered by JS -->
+        <div id="classCards" class="cards">
+          <p style="color:gray; padding:10px;">Loading classes...</p>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: CLASS STUDENTS
+           shown when a class card is clicked
+      ============================== -->
+      <div id="classStudentsSection" class="section">
+
+        <div class="header">
+          <h2 id="selectedClassTitle">Class Students</h2>
+          <p>Students enrolled in this class</p>
+        </div>
+
+        <button onclick="backToClasses()"
+          style="margin-bottom:16px;">
+          ⬅ Back to Classes
+        </button>
+
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>LRN</th>
+                <th>Full Name</th>
+                <th>Grade Level</th>
+                <th>Section</th>
+              </tr>
+            </thead>
+            <tbody id="classStudentTable">
+              <tr>
+                <td colspan="5"
+                  style="text-align:center; color:gray; padding:20px;">
+                  Loading students...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: MY SUBJECTS
+      ============================== -->
+      <div id="subjectsSection" class="section">
+
+        <div class="header">
+          <h2>My Subjects</h2>
+          <p>View assigned subjects and quarter upload progress</p>
+        </div>
+
+        <!-- SUBJECT CARDS — rendered by JS -->
+        <div id="subjectCards" class="cards">
+          <p style="color:gray; padding:10px;">Loading subjects...</p>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: GRADE RECORDS
+           view and filter submitted grades
+      ============================== -->
+      <div id="gradesSection" class="section">
+
+        <div class="header">
+          <h2>Grade Records</h2>
+          <p>View all approved and submitted grades for your classes</p>
+        </div>
+
+        <!-- GRADE RECORDS FILTERS -->
+        <div class="grade-filters">
+
+          <select id="gradeSubjectFilter" onchange="filterGrades()">
+            <option value="">All Subjects</option>
+          </select>
+
+          <select id="gradeSectionFilter" onchange="filterGrades()">
+            <option value="">All Sections</option>
+          </select>
+
+          <select id="gradeQuarterFilter" onchange="filterGrades()">
+            <option value="">All Quarters</option>
+            <option value="1st">1st Quarter</option>
+            <option value="2nd">2nd Quarter</option>
+            <option value="3rd">3rd Quarter</option>
+            <option value="4th">4th Quarter</option>
+          </select>
+
+          <select id="gradeStatusFilter" onchange="filterGrades()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="locked">Locked</option>
+          </select>
+
+          <input
+            type="text"
+            id="gradeSearchInput"
+            placeholder="Search by student name or LRN..."
+            oninput="filterGrades()"
+            style="min-width:220px;">
+
+        </div>
+
+        <!-- GRADE RECORDS TABLE -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>LRN</th>
+                <th>Subject</th>
+                <th>Grade Level</th>
+                <th>Section</th>
+                <th>Semester</th>
+                <th>Score</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="gradeRecordsTable">
+              <tr>
+                <td colspan="8"
+                  style="text-align:center; color:gray; padding:30px;">
+                  Loading grade records...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- EXPORT BUTTON -->
+        <div style="margin-top:16px;">
+          <button onclick="exportGrades()">
+            ⬇ Export Grades to Excel
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: UPLOAD GRADES
+      ============================== -->
+      <div id="uploadSection" class="section">
+
+        <div class="header">
+          <h2>Upload Grades</h2>
+          <p>Submit student grades via Excel file for admin review and approval</p>
+        </div>
+
+        <!-- UPLOAD FORM -->
+          <div class="upload-form">
+
+            <h3 style="color:#800000; margin-bottom:20px;">
+              📤 Grade Upload Form
+            </h3>
+
+            <!-- SUBJECT — only shows assigned subjects -->
+            <label>Subject</label>
+            <select id="uploadSubjectId">
+              <option value="">— Select Subject —</option>
+            </select>
+
+            <!-- GRADE LEVEL — auto-filled from subject -->
+            <label>Grade Level</label>
+            <select id="uploadGradeLevel">
+              <option value="">— Select Subject First —</option>
+            </select>
+
+            <!-- SECTION — auto-filled from subject -->
+            <label>Section</label>
+            <select id="uploadSectionName">
+              <option value="">— Select Subject First —</option>
+            </select>
+
+            <!-- QUARTER — pre-selects active quarter -->
+            <label>Semester</label>
+            <select id="uploadQuarter">
+              <option value="1st">1st Semester</option>
+              <option value="2nd">2nd Semester</option>
+              <option value="3rd">3rd Semester</option>
+            </select>
+
+            <!-- DOWNLOAD TEMPLATE BUTTON -->
+            <div style="margin-bottom:20px;">
+              <p style="font-weight:bold; font-size:12px; color:#555;
+                text-transform:uppercase; letter-spacing:0.4px;
+                margin-bottom:8px;">
+                Step 1 — Download Template
+              </p>
+              <button type="button"
+                id="downloadTemplateBtn"
+                onclick="downloadGradeTemplate()"
+                style="padding:10px 20px; background:#f5f5f5;
+                  color:#800000; border:1.5px solid #800000;
+                  border-radius:8px; cursor:pointer; font-size:14px;
+                  font-weight:bold; transition:.2s;">
+                ⬇ Download Grade Template
+              </button>
+              <p style="font-size:12px; color:gray; margin-top:6px;">
+                Template is pre-filled with your student list.
+                Fill in the Final Grade column then upload below.
+              </p>
+            </div>
+
+            <!-- DIVIDER -->
+            <hr style="border:none; border-top:1px solid #eee; margin:4px 0 20px;">
+
+            <!-- FILE UPLOAD -->
+            <p style="font-weight:bold; font-size:12px; color:#555;
+              text-transform:uppercase; letter-spacing:0.4px;
+              margin-bottom:8px;">
+              Step 2 — Upload Filled Template
+            </p>
+
+            <label>Excel File (.xlsx or .xls)</label>
+            <input type="file" id="gradeFile" accept=".xlsx,.xls">
+
+            <!-- FORMAT NOTE -->
+            <div class="upload-note" style="margin-top:10px;">
+              <strong>Important:</strong><br>
+              • Use only the downloaded template for this class<br>
+              • Fill in the <strong>Final Grade</strong> column (numbers 0–100)<br>
+              • Do not change the header rows or student names<br>
+              • Grades are sent to admin for approval before students can see them
+            </div>
+
+            <p id="uploadFormError" class="msg-error"></p>
+
+            <button id="previewBtn"
+              onclick="previewGradeFile()"
+              style="padding:11px 24px; background:#800000; color:white;
+                border:none; border-radius:8px; cursor:pointer;
+                font-size:14px; font-weight:bold; margin-top:6px;">
+              👁 Preview Before Submitting
+            </button>
+
+          </div>
+
+        <!-- PREVIEW SECTION — shown after file is parsed -->
+        <div id="previewSection" style="display:none; margin-top:24px;">
+
+          <div class="header" style="margin-bottom:8px;">
+            <h2>📋 Upload Preview</h2>
+            <p>Review all rows before submitting to admin for approval.</p>
+          </div>
+
+          <!-- PREVIEW SUMMARY CARDS -->
+          <div class="cards" style="margin-bottom:16px;">
+
+            <div class="card">
+              <p>Subject</p>
+              <h2 id="previewSubject">—</h2>
+            </div>
+
+            <div class="card">
+              <p>Semester</p>
+              <h2 id="previewQuarter">—</h2>
+            </div>
+
+            <div class="card">
+              <p>Class</p>
+              <h2 id="previewClass">—</h2>
+            </div>
+
+            <div class="card">
+              <p>Total Rows</p>
+              <h2 id="previewTotal">—</h2>
+            </div>
+
+            <div class="card">
+              <p>Valid Rows</p>
+              <h2 id="previewValid" style="color:green;">—</h2>
+            </div>
+
+            <div class="card">
+              <p>Errors Found</p>
+              <h2 id="previewErrors" style="color:red;">—</h2>
+            </div>
+
+          </div>
+
+          <!-- VALIDATION ERRORS BOX -->
+          <div id="validationErrorBox"
+            style="display:none; background:#fff0f0;
+              border:1px solid #f0c0c0; border-radius:8px;
+              padding:14px; margin-bottom:16px; font-size:13px;">
+            <p style="font-weight:bold; color:#cc0000; margin-bottom:8px;">
+              ⚠ Validation Issues Found:
+            </p>
+            <div id="validationErrorList"></div>
+          </div>
+
+          <!-- PREVIEW TABLE -->
+          <div class="preview-box">
+            <table style="width:100%; border-collapse:collapse;">
+              <thead style="background:#800000; color:white;">
+                <tr>
+                  <th style="padding:10px; text-align:left;">Row</th>
+                  <th style="padding:10px; text-align:left;">Name</th>
+                  <th style="padding:10px; text-align:left;">LRN</th>
+                  <th style="padding:10px; text-align:left;">Semester Grade</th>
+                  <th style="padding:10px; text-align:left;">Validation</th>
+                </tr>
+              </thead>
+              <tbody id="previewTable"></tbody>
+            </table>
+          </div>
+
+          <p id="submitError"   class="msg-error"></p>
+          <p id="submitSuccess" class="msg-success"></p>
+
+          <!-- SUBMIT BUTTONS -->
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;">
+
+            <button id="submitBtn" onclick="submitUploadGrades()"
+              style="padding:11px 24px; background:#800000; color:white;
+                border:none; border-radius:8px; cursor:pointer;
+                font-size:14px; font-weight:bold;">
+              📤 Submit to Admin
+            </button>
+
+            <button onclick="cancelPreview()"
+              style="padding:11px 20px; background:#eee; color:#333;
+                border:none; border-radius:8px; cursor:pointer;
+                font-size:14px;">
+              ❌ Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: UPLOAD HISTORY
+      ============================== -->
+      <div id="historySection" class="section">
+
+        <div class="header">
+          <h2>Upload History</h2>
+          <p>Track all grade submissions and their approval status</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Uploads</p>
+            <h2 id="historyTotal">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Pending</p>
+            <h2 id="historyPending" style="color:orange;">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Approved</p>
+            <h2 id="historyApproved" style="color:green;">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Rejected</p>
+            <h2 id="historyRejected" style="color:red;">—</h2>
+          </div>
+
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters" style="margin-top:16px;">
+
+          <select id="historyQuarterFilter" onchange="filterHistory()">
+            <option value="">All Semesters</option>
+            <option value="1st">1st Semester</option>
+            <option value="2nd">2nd Semester</option>
+            <option value="3rd">3rd Semester</option>
+            <option value="4th">4th Semester</option>
+          </select>
+
+          <select id="historyStatusFilter" onchange="filterHistory()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="locked">Locked</option>
+          </select>
+
+        </div>
+
+        <!-- HISTORY TABLE -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Class</th>
+                <th>Semester</th>
+                <th>Date Submitted</th>
+                <th>Status</th>
+                <th>Admin Remarks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyTable">
+              <tr>
+                <td colspan="7"
+                  style="text-align:center; color:gray; padding:20px;">
+                  Loading history...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: SETTINGS
+      ============================== -->
+      <div id="settingsSection" class="section">
+
+        <div class="header">
+          <h2>Settings</h2>
+          <p>Your account information and preferences</p>
+        </div>
+
+        <div class="cards" style="margin-bottom:24px;">
+
+          <div class="card">
+            <p>Username / PRC ID</p>
+            <h2 id="settingsPRCID">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Full Name</p>
+            <h2 id="settingsFullName">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="settingsSchoolYear">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active Semester</p>
+            <h2 id="settingsActiveQuarter">—</h2>
+          </div>
+
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+
+          <button onclick="toggleDarkMode()">
+            🌙 Toggle Dark Mode
+          </button>
+
+          <button onclick="changePassword()">
+            🔑 Change Password
+          </button>
+
+        </div>
+
+      </div>
+
+
+    </div><!-- end .content -->
+  </div><!-- end .main -->
+</div><!-- end .container -->
+<!-- ==============================
+     MODAL: TEACHER CHANGE PASSWORD
+============================== -->
+<div id="changePasswordModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:440px; max-width:95%;">
+
+    <h3 style="color:#800000; margin-bottom:6px;">
+      🔑 Change Password
+    </h3>
+
+    <p style="color:gray; font-size:13px; margin-bottom:20px;">
+      You will be logged out after changing your password.
+    </p>
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      Current Password
+    </label>
+    <input type="password" id="teacherCurrentPassword"
+      placeholder="Enter your current password"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:16px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      New Password
+    </label>
+    <input type="password" id="teacherNewPassword"
+      placeholder="New password (min 6 characters)"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:6px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      Confirm New Password
+    </label>
+    <input type="password" id="teacherConfirmPassword"
+      placeholder="Confirm new password"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:6px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <p id="changePasswordError"
+      style="color:red; font-size:13px; margin-bottom:16px; min-height:18px;">
+    </p>
+
+    <button onclick="submitChangePassword()"
+      style="width:100%; padding:11px; background:#800000;
+        color:white; border:none; border-radius:8px;
+        cursor:pointer; font-size:14px; font-weight:bold;
+        margin-bottom:10px;">
+      💾 Save New Password
+    </button>
+
+    <button onclick="closeChangePasswordModal()"
+      style="width:100%; padding:10px; background:#eee;
+        color:#333; border:none; border-radius:8px;
+        cursor:pointer; font-size:14px;">
+      ✖ Cancel
+    </button>
+
+  </div>
+</div>
+
+<script src="../JS/api.js"></script>
+<script src="../JS/teacher.js"></script>
+
+</body>
+</html>

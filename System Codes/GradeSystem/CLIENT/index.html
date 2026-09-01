@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grading Portal</title>
+  <link rel="stylesheet" href="CSS/styles.css">
+  <link rel="icon" type="image/png" href="/assets/image/logo.png">
+  <style>
+
+    body {
+      background: #f5f6fa;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 16px;
+    }
+
+    .auth-card {
+      background: white;
+      width: 100%;
+      max-width: 370px;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+      padding: 36px 32px 30px;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .auth-header h1 {
+      color: #800000;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .auth-header p {
+      color: #888;
+      font-size: 13px;
+    }
+
+    /* only one screen shows at a time */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .screen-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .field {
+      margin-bottom: 13px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      color: #555;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      box-sizing: border-box;
+      color: #333;
+    }
+
+    .field input:focus {
+      border-color: #800000;
+    }
+
+    .role-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .role-btn {
+      flex: 1;
+      padding: 9px 6px;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      font-size: 13px;
+      color: #666;
+      cursor: pointer;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .role-btn.selected {
+      border-color: #800000;
+      background: #fff5f5;
+      color: #800000;
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 11px;
+      background: #800000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity .2s;
+    }
+
+    .btn-main:hover { opacity: 0.87; }
+
+    .btn-back {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      color: #800000;
+      border: 1.5px solid #800000;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: .2s;
+    }
+
+    .btn-back:hover { background: #fff5f5; }
+
+    .divider {
+      text-align: center;
+      color: #bbb;
+      font-size: 13px;
+      margin: 18px 0 14px;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      height: 1px;
+      width: 36%;
+      background: #eee;
+    }
+
+    .divider::before { left: 0; }
+    .divider::after  { right: 0; }
+
+    .link-row {
+      text-align: center;
+    }
+
+    .link-row span {
+      color: #800000;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .link-row span:hover { text-decoration: underline; }
+
+    .msg {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 12px;
+      min-height: 18px;
+      line-height: 1.5;
+    }
+
+    .msg.error   { color: #cc0000; }
+    .msg.success { color: #007700; }
+
+    @media (max-width: 420px) {
+      .auth-card { padding: 28px 18px 24px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+
+  <!-- HEADER always visible -->
+  <div class="auth-header">
+    <h1>🏫 Grading Portal</h1>
+    <p>School Grade Management System</p>
+  </div>
+
+  <!-- ==============================
+       SCREEN 1 — LOGIN
+  ============================== -->
+  <div id="screenLogin" class="screen active">
+
+    <p class="screen-title">Sign In</p>
+
+    <div class="field">
+      <label>Username / LRN / PRC ID</label>
+      <input
+        type="text"
+        id="loginUsername"
+        placeholder="Enter your username"
+        autocomplete="username"
+      >
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+      >
+    </div>
+
+    <button class="btn-main" onclick="submitLogin()">
+      🔑 Login
+    </button>
+
+    <p id="loginError" class="msg error"></p>
+
+    <div class="divider">or</div>
+
+    <div class="link-row">
+      <span onclick="goTo('screenActivate')">
+        ✅ Activate Account
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ==============================
+       SCREEN 2 — ACTIVATE
+  ============================== -->
+  <div id="screenActivate" class="screen">
+
+    <p class="screen-title">Activate Account</p>
+
+    <div class="role-row">
+      <button
+        type="button"
+        class="role-btn selected"
+        id="roleStudent"
+        onclick="selectRole('student')"
+      >
+        👨‍🎓 Student
+      </button>
+      <button
+        type="button"
+        class="role-btn"
+        id="roleTeacher"
+        onclick="selectRole('teacher')"
+      >
+        👩‍🏫 Teacher
+      </button>
+    </div>
+
+    <!-- STUDENT FIELDS -->
+    <div id="studentFields">
+
+      <div class="field">
+        <label>LRN</label>
+        <input type="text" id="activateLRN"
+          placeholder="Enter your LRN">
+      </div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="activateStudentName"
+          placeholder="Enter your full registered name">
+      </div>
+
+      <div class="field">
+        <label>Temporary Password</label>
+        <input type="password" id="activateStudentTemp"
+          placeholder="Enter temporary password">
+      </div>
+
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="activateStudentNew"
+          placeholder="Create your personal password">
+      </div>
+
+      <div class="field">
+        <label>Confirm New Password</label>
+        <input type="password" id="activateStudentConfirm"
+          placeholder="Confirm your new password">
+      </div>
+
+    </div>
+
+    <!-- TEACHER FIELDS -->
+    <div id="teacherFields" style="display:none;">
+
+      <div class="field">
+        <label>PRC ID</label>
+        <input type="text" id="activatePRCID"
+          placeholder="Enter your PRC ID">
+      </div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="activateTeacherName"
+          placeholder="Enter your full registered name">
+      </div>
+
+      <div class="field">
+        <label>Temporary Password</label>
+        <input type="password" id="activateTeacherTemp"
+          placeholder="Enter temporary password">
+      </div>
+
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="activateTeacherNew"
+          placeholder="Create your personal password">
+      </div>
+
+      <div class="field">
+        <label>Confirm New Password</label>
+        <input type="password" id="activateTeacherConfirm"
+          placeholder="Confirm your new password">
+      </div>
+
+    </div>
+
+    <button class="btn-main" onclick="submitActivation()">
+      ✅ Activate Account
+    </button>
+
+    <button class="btn-back" onclick="goTo('screenLogin')">
+      ← Back to Login
+    </button>
+
+    <p id="activateError" class="msg error"></p>
+    <p id="activateSuccess" class="msg success"></p>
+
+  </div>
+
+</div>
+
+<script src="JS/login.js"></script>
+</body>
+</html>

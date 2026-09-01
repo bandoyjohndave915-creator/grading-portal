@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Grading Portal</title>
+  <link rel="stylesheet" href="../CSS/styles.css">
+  <link rel="icon" type="image/png" href="/assets/image/logo.png">
+  <!-- NO dashboard.js here — admin.js handles everything -->
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="container">
+
+  <!-- ==============================
+       SIDEBAR
+  ============================== -->
+  <div class="sidebar">
+
+    <button class="menu-btn"
+      onclick="toggleSidebar()"
+      style="color:white;">
+      ☰
+    </button>
+
+    <br><br><br>
+
+    <h2>Admin Portal</h2>
+
+    <ul>
+
+      <li class="active"
+        onclick="showSection('dashboardSection', this)">
+        🏠 Dashboard
+      </li>
+
+      <li onclick="showSection('studentsSection', this)">
+        👨‍🎓 Students
+      </li>
+
+      <li onclick="showSection('teachersSection', this)">
+        👩‍🏫 Teachers
+      </li>
+
+      <li onclick="showSection('subjectsSection', this)">
+        📓 Subjects
+      </li>
+
+      <li onclick="showSection('gradesSection', this)">
+        📊 Grade Uploads
+      </li>
+
+      <li onclick="showSection('reportsSection', this)">
+        📁 Reports
+      </li>
+      <li onclick="showSection('archivedSection', this)">
+        🗄 Archived Records
+      </li>
+
+      <li onclick="showSection('settingsSection', this)">
+        ⚙️ Settings
+      </li>
+
+    </ul>
+
+  </div>
+
+  <!-- ==============================
+       MAIN
+  ============================== -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+      <button class="menu-btn" onclick="toggleSidebar()">
+        ☰
+      </button>
+
+      <h3>Admin Dashboard</h3>
+
+      <div class="user-menu">
+
+        <div class="user" onclick="toggleDropdown()">
+          👤 Admin ⯆
+        </div>
+
+        <div class="dropdown" id="dropdownMenu">
+          <p onclick="showSection('settingsSection', null)">
+            ⚙️ Settings
+          </p>
+          <p onclick="toggleDarkMode()">
+            🌙 Dark / ☀️ Light
+          </p>
+          <hr>
+          <p onclick="logout()">
+            🚪 Logout
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+
+      <!-- ==============================
+           SECTION: DASHBOARD
+      ============================== -->
+      <div id="dashboardSection" class="section active-section">
+
+        <div class="header">
+          <h2>Dashboard</h2>
+          <p>Overview of all platform statistics</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Students</p>
+            <h2 id="dashTotalStudents">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Total Teachers</p>
+            <h2 id="dashTotalTeachers">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Total Subjects</p>
+            <h2 id="dashTotalSubjects">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Pending Uploads</p>
+            <h2 id="dashPendingUploads">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="dashSchoolYear">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Current Semester</p>
+            <h2 id="dashActiveQuarter">—</h2>
+          </div>
+
+        </div>
+
+        <!-- DASHBOARD GRID -->
+        <div class="dashboard-grid">
+
+          <!-- RECENT ACTIVITY -->
+          <div class="dashboard-box">
+            <h3>🕒 Recent Activity</h3>
+            <ul class="activity-list" id="recentActivityList">
+              <li style="color:gray;">Loading...</li>
+            </ul>
+          </div>
+
+          <!-- PENDING TASKS -->
+          <div class="dashboard-box">
+            <h3>⚠ Pending Tasks</h3>
+            <ul class="activity-list" id="pendingTasksList">
+              <li style="color:gray;">Loading...</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="dashboard-box quick-actions">
+
+          <h3>⚡ Quick Actions</h3>
+
+          <div class="action-buttons">
+
+            <button onclick="showSection('studentsSection', null)">
+              ➕ Add Student
+            </button>
+
+            <button onclick="showSection('teachersSection', null)">
+              ➕ Add Teacher
+            </button>
+
+            <button onclick="showSection('gradesSection', null)">
+              📂 Review Uploads
+            </button>
+
+            <button onclick="showSection('reportsSection', null)">
+              📊 Generate Reports
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: STUDENTS
+      ============================== -->
+      <div id="studentsSection" class="section">
+
+        <div class="header">
+          <h2>Manage Students</h2>
+          <p>Manage student records and account registrations</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Students</p>
+            <h2 id="totalStudents">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Activated Accounts</p>
+            <h2 id="registeredStudents">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Not Yet Activated</p>
+            <h2 id="pendingStudents">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="studentsSchoolYear">—</h2>
+          </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="student-toolbar">
+
+          <button onclick="openAddStudent()">
+            ➕ Add Student
+          </button>
+
+          <button onclick="importExcel()">
+            📂 Import Excel
+          </button>
+
+            <button
+              id="studentEditModeBtn"
+              onclick="toggleStudentEditMode()"
+              style="background:#800000; color:white; border:none;
+                padding:10px 16px; border-radius:8px; cursor:pointer;
+                font-weight:bold;">
+              ☑ Edit Mode
+            </button>
+        </div>
+                <!-- STUDENT BULK ACTION BAR — hidden until edit mode -->
+        <div id="studentBulkBar"
+          style="display:none; gap:10px; align-items:center;
+            margin-bottom:16px; padding:12px 16px;
+            background:#fff5f5; border:1px solid #f0c0c0;
+            border-radius:8px; flex-wrap:wrap;">
+
+          <span id="selectedStudentCount"
+            style="font-weight:bold; color:#800000; font-size:14px;">
+          </span>
+
+          <button
+            id="bulkArchiveStudentBtn"
+            onclick="bulkArchiveStudents()"
+            disabled
+            style="background:#e67e00; color:white; border:none;
+              padding:9px 16px; border-radius:8px; cursor:pointer;
+              font-weight:bold; opacity:0.5;">
+            🗄 Archive Selected
+          </button>
+
+          <button
+            id="bulkDeleteStudentBtn"
+            onclick="bulkDeleteStudents()"
+            disabled
+            style="background:#cc0000; color:white; border:none;
+              padding:9px 16px; border-radius:8px; cursor:pointer;
+              font-weight:bold; opacity:0.5;">
+            🗑 Delete Selected
+          </button>
+
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+          <input
+            type="text"
+            id="searchStudent"
+            placeholder="Search by LRN or Name"
+            onkeyup="filterStudents()"
+          >
+
+          <select id="gradeFilter" onchange="filterStudents()">
+            <option value="">All Grade Levels</option>
+            <option>Grade 1</option>
+            <option>Grade 2</option>
+            <option>Grade 3</option>
+            <option>Grade 4</option>
+            <option>Grade 5</option>
+            <option>Grade 6</option>
+          </select>
+
+          <select id="sectionFilter" onchange="filterStudents()">
+            <option value="">All Sections</option>
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+          </select>
+
+          <select id="statusFilter" onchange="filterStudents()">
+            <option value="">All Status</option>
+            <option value="activated">Activated</option>
+            <option value="not_activated">Not Activated</option>
+          </select>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr id="studentTableHead">
+                <th>LRN</th>
+                <th>Full Name</th>
+                <th>Grade Level</th>
+                <th>Section</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTable">
+              <tr>
+                <td colspan="7"
+                  style="text-align:center; color:gray; padding:30px;">
+                  Loading students...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: TEACHERS
+      ============================== -->
+      <div id="teachersSection" class="section">
+
+        <div class="header">
+          <h2>Manage Teachers</h2>
+          <p>Manage teacher records and subject assignments</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Teachers</p>
+            <h2 id="teacherCount">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Activated</p>
+            <h2 id="registeredTeacherCount">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Not Yet Activated</p>
+            <h2 id="pendingTeacherCount">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="teachersSchoolYear">—</h2>
+          </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="teacher-toolbar">
+
+          <button onclick="openTeacherModal()">
+            ➕ Add Teacher
+          </button>
+
+            <button
+              id="teacherEditModeBtn"
+              onclick="toggleTeacherEditMode()"
+              style="background:#800000; color:white; border:none;
+                padding:10px 16px; border-radius:8px; cursor:pointer;
+                font-weight:bold;">
+              ☑ Edit Mode
+            </button>
+
+        </div>
+        <!-- TEACHER BULK ACTION BAR -->
+          <div id="teacherBulkBar"
+            style="display:none; gap:10px; align-items:center;
+              margin-bottom:16px; padding:12px 16px;
+              background:#fff5f5; border:1px solid #f0c0c0;
+              border-radius:8px; flex-wrap:wrap;">
+
+            <span id="selectedTeacherCount"
+              style="font-weight:bold; color:#800000; font-size:14px;">
+            </span>
+
+            <button
+              id="bulkArchiveTeacherBtn"
+              onclick="bulkArchiveTeachers()"
+              disabled
+              style="background:#e67e00; color:white; border:none;
+                padding:9px 16px; border-radius:8px; cursor:pointer;
+                font-weight:bold; opacity:0.5;">
+              🗄 Archive Selected
+            </button>
+
+            <button
+              id="bulkDeleteTeacherBtn"
+              onclick="bulkDeleteTeachers()"
+              disabled
+              style="background:#cc0000; color:white; border:none;
+                padding:9px 16px; border-radius:8px; cursor:pointer;
+                font-weight:bold; opacity:0.5;">
+              🗑 Delete Selected
+            </button>
+
+          </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+          <input
+            type="text"
+            id="teacherSearch"
+            placeholder="Search by PRC ID or Name"
+            onkeyup="filterTeachers()"
+          >
+
+          <select id="teacherStatusFilter" onchange="filterTeachers()">
+            <option value="">All Status</option>
+            <option value="activated">Activated</option>
+            <option value="not_activated">Not Activated</option>
+          </select>
+
+        </div>
+
+        <!-- TABLE -->
+        <!-- NOTE: Teachers can have multiple assignments.
+             The table shows teacher info.
+             Clicking View shows all their assignments. -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr id="teacherTableHead">
+                <th>PRC ID</th>
+                <th>Full Name</th>
+                <th>Assignments</th>
+                <th>Account Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teacherTable">
+              <tr>
+                <td colspan="5"
+                  style="text-align:center; color:gray; padding:30px;">
+                  Loading teachers...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: SUBJECTS
+      ============================== -->
+      <div id="subjectsSection" class="section">
+
+        <div class="header">
+          <h2>Manage Subjects</h2>
+          <p>Add and manage subjects per grade level</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Subjects</p>
+            <h2 id="totalSubjects">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Grade Levels</p>
+            <h2>Grade 1–6</h2>
+          </div>
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="subjectsSchoolYear">—</h2>
+          </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="subject-toolbar">
+
+          <button onclick="openAddSubject()">
+            ➕ Add Subject
+          </button>
+            <button
+              id="subjectEditModeBtn"
+              onclick="toggleSubjectEditMode()"
+              style="background:#800000; color:white; border:none;
+                padding:10px 16px; border-radius:8px; cursor:pointer;
+                font-weight:bold;">
+              ☑ Edit Mode
+            </button>
+            
+        </div>
+
+        <!-- SUBJECT BULK ACTION BAR -->
+        <div id="subjectBulkBar"
+          style="display:none; gap:10px; align-items:center;
+            margin-bottom:16px; padding:12px 16px;
+            background:#fff5f5; border:1px solid #f0c0c0;
+            border-radius:8px; flex-wrap:wrap;">
+
+          <span id="selectedSubjectCount"
+            style="font-weight:bold; color:#800000; font-size:14px;">
+          </span>
+
+          <button
+            id="bulkArchiveSubjectBtn"
+            onclick="bulkArchiveSubjectsSelected()"
+            disabled
+            style="background:#e67e00; color:white; border:none;
+              padding:9px 16px; border-radius:8px; cursor:pointer;
+              font-weight:bold; opacity:0.5;">
+            🗄 Archive Selected
+          </button>
+
+          <button
+            id="bulkDeleteSubjectBtn"
+            onclick="bulkDeleteSubjectsSelected()"
+            disabled
+            style="background:#cc0000; color:white; border:none;
+              padding:9px 16px; border-radius:8px; cursor:pointer;
+              font-weight:bold; opacity:0.5;">
+            🗑 Delete Selected
+          </button>
+
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+
+          <input
+            type="text"
+            id="subjectSearch"
+            placeholder="Search Subject"
+            onkeyup="filterSubjects()"
+          >
+
+          <select id="subjectGradeFilter" onchange="filterSubjects()">
+            <option value="">All Grade Levels</option>
+            <option>Grade 1</option>
+            <option>Grade 2</option>
+            <option>Grade 3</option>
+            <option>Grade 4</option>
+            <option>Grade 5</option>
+            <option>Grade 6</option>
+          </select>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr id="subjectTableHead">
+                <th>Subject Name</th>
+                <th>Grade Level</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="subjectTable">
+              <tr>
+                <td colspan="4"
+                  style="text-align:center; color:gray; padding:30px;">
+                  Loading subjects...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+      <!-- ==============================
+           SECTION: GRADE UPLOADS
+      ============================== -->
+      <div id="gradesSection" class="section">
+
+        <div class="header">
+          <h2>Manage Grade Uploads</h2>
+          <p>Review and approve teacher uploaded grades</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Total Uploads</p>
+            <h2 id="totalUploads">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Pending Review</p>
+            <h2 id="pendingUploads">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Approved</p>
+            <h2 id="approvedUploads">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Rejected</p>
+            <h2 id="rejectedUploads">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Locked</p>
+            <h2 id="lockedUploads">—</h2>
+          </div>
+
+        </div>
+
+
+        <!-- GRADE UPLOADS FILTERS -->
+        <div class="filters" style="margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+
+          <input
+            type="text"
+            id="searchTeacherUpload"
+            placeholder="🔍 Search teacher or subject..."
+            oninput="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; min-width:220px;
+              outline:none;">
+
+          <!-- DYNAMIC SUBJECT FILTER -->
+          <select id="uploadSubjectFilter" onchange="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; outline:none;">
+            <option value="">All Subjects</option>
+          </select>
+
+          <select id="uploadQuarterFilter" onchange="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; outline:none;">
+            <option value="">All Semesters</option>
+            <option value="1st">1st Semester</option>
+            <option value="2nd">2nd Semester</option>
+            <option value="3rd">3rd Semester</option>
+            <option value="4th">4th Semester</option>
+          </select>
+
+          <select id="uploadGradeFilter" onchange="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; outline:none;">
+            <option value="">All Grade Levels</option>
+            <option>Grade 1</option>
+            <option>Grade 2</option>
+            <option>Grade 3</option>
+            <option>Grade 4</option>
+            <option>Grade 5</option>
+            <option>Grade 6</option>
+          </select>
+
+          <select id="uploadSectionFilter" onchange="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; outline:none;">
+            <option value="">All Sections</option>
+          </select>
+
+          <select id="uploadStatusFilter" onchange="searchUploads()"
+            style="padding:9px 12px; border:1.5px solid #ddd;
+              border-radius:8px; font-size:13px; outline:none;">
+            <option value="">All Status</option>
+            <option value="pending">⏳ Pending</option>
+            <option value="approved">✅ Approved</option>
+            <option value="rejected">❌ Rejected</option>
+            <option value="locked">🔒 Locked</option>
+          </select>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-box">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Teacher</th>
+                <th>Subject</th>
+                <th>Semester</th>
+                <th>Grade Level</th>
+                <th>Section</th>
+                <th>School Year</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="uploadTable">
+              <tr>
+                <td colspan="10"
+                  style="text-align:center; color:gray; padding:30px;">
+                  Loading uploads...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+
+<!-- ==============================
+     SECTION: REPORTS
+============================== -->
+<div id="reportsSection" class="section">
+
+  <div class="header">
+    <h2>Reports</h2>
+    <p>View and analyze school records and statistics</p>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+    <div class="card">
+      <p>Total Students</p>
+      <h2 id="reportsTotalStudents">—</h2>
+    </div>
+    <div class="card">
+      <p>Total Teachers</p>
+      <h2 id="reportsTotalTeachers">—</h2>
+    </div>
+    <div class="card">
+      <p>Approved Uploads</p>
+      <h2 id="reportsApprovedUploads">—</h2>
+    </div>
+    <div class="card">
+      <p>Active School Year</p>
+      <h2 id="reportsSchoolYear">—</h2>
+    </div>
+  </div>
+
+  <!-- REPORT TYPE BUTTONS -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin:20px 0 16px;">
+    <button onclick="studentReport()"
+      id="rptBtn-students"
+      style="padding:10px 18px; background:#800000; color:white;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:13px; font-weight:bold;">
+      👨‍🎓 Student Report
+    </button>
+    <button onclick="teacherReport()"
+      id="rptBtn-teachers"
+      style="padding:10px 18px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:13px; font-weight:bold;">
+      👩‍🏫 Teacher Report
+    </button>
+    <button onclick="gradeUploadReport()"
+      id="rptBtn-gradeUpload"
+      style="padding:10px 18px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:13px; font-weight:bold;">
+      📊 Grade Upload Report
+    </button>
+    <button onclick="schoolYearHistory()"
+      id="rptBtn-schoolYear"
+      style="padding:10px 18px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:13px; font-weight:bold;">
+      🕒 School Year History
+    </button>
+  </div>
+
+  <!-- FILTERS -->
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+
+    <input
+      type="text"
+      id="reportSearchInput"
+      placeholder="🔍 Search in results..."
+      oninput="searchReportTable()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; min-width:220px;
+        outline:none;">
+
+    <select id="reportSchoolYearFilter" onchange="refreshCurrentReport()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; outline:none;">
+      <option value="">All School Years</option>
+    </select>
+
+    <select id="reportGradeFilter" onchange="refreshCurrentReport()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; outline:none;">
+      <option value="">All Grade Levels</option>
+      <option>Grade 1</option>
+      <option>Grade 2</option>
+      <option>Grade 3</option>
+      <option>Grade 4</option>
+      <option>Grade 5</option>
+      <option>Grade 6</option>
+    </select>
+
+    <select id="reportSectionFilter" onchange="refreshCurrentReport()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; outline:none;">
+      <option value="">All Sections</option>
+    </select>
+
+    <select id="reportQuarterFilter" onchange="refreshCurrentReport()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; outline:none;">
+      <option value="">All Semester</option>
+      <option value="1st">1st Semester</option>
+      <option value="2nd">2nd Semester</option>
+      <option value="3rd">3rd Semester</option>
+      <option value="4th">4th Semester</option>
+    </select>
+
+    <select id="reportStatusFilter" onchange="refreshCurrentReport()"
+      style="padding:9px 12px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; outline:none;">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+      <option value="locked">Locked</option>
+    </select>
+
+  </div>
+
+  <!-- ACTIVE COUNTER -->
+  <div id="reportCounterBar"
+    style="display:none; background:#fff5f5; border:1px solid #f0c0c0;
+      border-radius:8px; padding:10px 16px; margin-bottom:12px;
+      font-size:13px; font-weight:bold; color:#800000;">
+  </div>
+
+  <!-- DYNAMIC TABLE -->
+  <div class="table-box">
+    <table id="reportsMainTable">
+      <thead>
+        <tr id="reportsTableHead">
+          <th>School Year</th>
+          <th>Status</th>
+          <th>Semesters</th>
+          <th>Students</th>
+          <th>Teachers</th>
+          <th>Uploads</th>
+          <th>Approved</th>
+          <th>Pending</th>
+        </tr>
+      </thead>
+      <tbody id="reportsTable">
+        <tr>
+          <td colspan="8"
+            style="text-align:center; color:gray; padding:30px;">
+            Select a report type above
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ==============================
+     SECTION: ARCHIVED RECORDS
+============================== -->
+<div id="archivedSection" class="section">
+
+  <!-- ==============================
+       TOP TABS — switch between
+       School Year History and
+       Archived Students/Teachers/Subjects
+  ============================== -->
+  <div style="display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;">
+
+    <button
+      id="archiveMainTab-years"
+      onclick="switchArchiveMainTab('years')"
+      style="padding:11px 22px; background:#800000; color:white;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:14px; font-weight:bold;">
+      📅 School Year Records
+    </button>
+
+    <button
+      id="archiveMainTab-students"
+      onclick="switchArchiveMainTab('students')"
+      style="padding:11px 22px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:14px; font-weight:bold;">
+      👨‍🎓 Archived Students
+    </button>
+
+    <button
+      id="archiveMainTab-teachers"
+      onclick="switchArchiveMainTab('teachers')"
+      style="padding:11px 22px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:14px; font-weight:bold;">
+      👩‍🏫 Archived Teachers
+    </button>
+
+    <button
+      id="archiveMainTab-subjects"
+      onclick="switchArchiveMainTab('subjects')"
+      style="padding:11px 22px; background:#ccc; color:#333;
+        border:none; border-radius:8px; cursor:pointer;
+        font-size:14px; font-weight:bold;">
+      📓 Archived Subjects
+    </button>
+
+  </div>
+
+
+  <!-- ==============================
+       TAB CONTENT: SCHOOL YEAR RECORDS
+  ============================== -->
+  <div id="archiveMainContent-years">
+
+    <!-- LIST VIEW -->
+    <div id="archivedYearListView">
+
+      <div class="header">
+        <h2>📅 School Year Records</h2>
+        <p>
+          Browse completed school years and view all records from each year
+        </p>
+      </div>
+
+      <div id="archivedYearCards" class="cards" style="margin-top:16px;">
+        <p style="color:gray; padding:10px;">
+          Loading school year records...
+        </p>
+      </div>
+
+    </div>
+
+    <!-- DETAIL VIEW — shown when clicking a year card -->
+    <div id="archivedYearDetailView" style="display:none;">
+
+      <div style="display:flex; align-items:center;
+        gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+
+        <button onclick="backToYearList()"
+          style="padding:9px 16px; background:#eee; color:#333;
+            border:none; border-radius:8px; cursor:pointer;
+            font-size:14px;">
+          ← Back to School Years
+        </button>
+
+        <h2 id="archivedYearTitle"
+          style="color:#800000; margin:0;">
+          School Year Records
+        </h2>
+
+        <span id="archivedYearBadge"
+          style="padding:4px 12px; border-radius:12px;
+            font-size:12px; font-weight:bold;">
+        </span>
+
+      </div>
+
+      <!-- SUMMARY CARDS -->
+      <div class="cards" style="margin-bottom:20px;">
+        <div class="card">
+          <p>Total Students</p>
+          <h2 id="yearRecordStudents">—</h2>
+        </div>
+        <div class="card">
+          <p>Total Teachers</p>
+          <h2 id="yearRecordTeachers">—</h2>
+        </div>
+        <div class="card">
+          <p>Total Uploads</p>
+          <h2 id="yearRecordUploads">—</h2>
+        </div>
+        <div class="card">
+          <p>Approved</p>
+          <h2 id="yearRecordApproved" style="color:green;">—</h2>
+        </div>
+        <div class="card">
+          <p>Locked</p>
+          <h2 id="yearRecordLocked" style="color:#555;">—</h2>
+        </div>
+      </div>
+
+      <!-- YEAR RECORD TAB BUTTONS -->
+      <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+
+        <button onclick="loadYearTab('students')"
+          id="yearTab-students"
+          style="padding:9px 18px; background:#800000; color:white;
+            border:none; border-radius:8px; cursor:pointer;
+            font-size:13px; font-weight:bold;">
+          👨‍🎓 Students
+        </button>
+
+        <button onclick="loadYearTab('teachers')"
+          id="yearTab-teachers"
+          style="padding:9px 18px; background:#ccc; color:#333;
+            border:none; border-radius:8px; cursor:pointer;
+            font-size:13px; font-weight:bold;">
+          👩‍🏫 Teachers
+        </button>
+
+        <button onclick="loadYearTab('uploads')"
+          id="yearTab-uploads"
+          style="padding:9px 18px; background:#ccc; color:#333;
+            border:none; border-radius:8px; cursor:pointer;
+            font-size:13px; font-weight:bold;">
+          📤 Grade Uploads
+        </button>
+
+        <button onclick="loadYearTab('grades')"
+          id="yearTab-grades"
+          style="padding:9px 18px; background:#ccc; color:#333;
+            border:none; border-radius:8px; cursor:pointer;
+            font-size:13px; font-weight:bold;">
+          📊 All Grades
+        </button>
+
+      </div>
+
+      <!-- SEARCH -->
+      <div style="margin-bottom:14px;">
+        <input
+          type="text"
+          id="yearRecordSearch"
+          placeholder="🔍 Search in this year's records..."
+          oninput="searchYearRecord()"
+          style="padding:9px 12px; border:1.5px solid #ddd;
+            border-radius:8px; font-size:13px; width:100%;
+            max-width:400px; outline:none; box-sizing:border-box;">
+      </div>
+
+      <!-- COUNTER BAR -->
+      <div id="yearRecordCounterBar"
+        style="display:none; background:#fff5f5;
+          border:1px solid #f0c0c0; border-radius:8px;
+          padding:10px 16px; margin-bottom:12px;
+          font-size:13px; font-weight:bold; color:#800000;">
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr id="yearRecordTableHead"></tr>
+          </thead>
+          <tbody id="yearRecordTable">
+            <tr>
+              <td colspan="6"
+                style="text-align:center; color:gray; padding:30px;">
+                Select a tab to view records
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==============================
+       TAB CONTENT: ARCHIVED STUDENTS
+  ============================== -->
+  <div id="archiveMainContent-students" style="display:none;">
+
+    <div class="header">
+      <h2>👨‍🎓 Archived Students</h2>
+      <p>
+        Students removed from active class lists.
+        Their grades and records are preserved.
+      </p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="cards" style="margin-bottom:16px;">
+      <div class="card">
+        <p>Total Archived Students</p>
+        <h2 id="archivedStudentCount">—</h2>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div style="margin-bottom:14px;">
+      <input
+        type="text"
+        id="searchArchivedStudents"
+        placeholder="🔍 Search by name or LRN..."
+        onkeyup="filterArchivedStudents()"
+        style="padding:9px 12px; border:1.5px solid #ddd;
+          border-radius:8px; font-size:13px; min-width:260px;
+          outline:none;">
+    </div>
+
+    <!-- BULK ACTION BAR -->
+    <div style="display:flex; gap:10px; align-items:center;
+      flex-wrap:wrap; margin-bottom:14px; padding:12px 16px;
+      background:#fff8f0; border:1px solid #f0d0b0;
+      border-radius:8px;">
+
+      <span id="selectedArchivedStudentCount"
+        style="font-weight:bold; color:#800000; font-size:13px;">
+      </span>
+
+      <button
+        id="bulkRestoreStudentBtn"
+        onclick="bulkRestoreStudents()"
+        disabled
+        style="padding:9px 16px; background:#007700; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        ♻ Restore Selected
+      </button>
+
+      <button
+        id="bulkDeleteArchivedStudentBtn"
+        onclick="bulkDeleteArchivedStudents()"
+        disabled
+        style="padding:9px 16px; background:#cc0000; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        🗑 Permanently Delete
+      </button>
+
+      <span style="font-size:12px; color:gray;">
+        ⚠ Permanent delete cannot be undone
+      </span>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px; text-align:center;">
+              <input type="checkbox"
+                id="selectAllArchivedStudents"
+                onchange="toggleSelectAllArchivedStudents()"
+                style="width:16px; height:16px; cursor:pointer;">
+            </th>
+            <th>LRN</th>
+            <th>Full Name</th>
+            <th>Last Grade Level</th>
+            <th>Last Section</th>
+            <th>Last School Year</th>
+            <th>Archive Reason</th>
+            <th>Archived On</th>
+          </tr>
+        </thead>
+        <tbody id="archivedStudentTable">
+          <tr>
+            <td colspan="8"
+              style="text-align:center; color:gray; padding:30px;">
+              Loading...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- ==============================
+       TAB CONTENT: ARCHIVED TEACHERS
+  ============================== -->
+  <div id="archiveMainContent-teachers" style="display:none;">
+
+    <div class="header">
+      <h2>👩‍🏫 Archived Teachers</h2>
+      <p>
+        Teachers removed from active assignments.
+        Their submitted grades remain intact.
+      </p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="cards" style="margin-bottom:16px;">
+      <div class="card">
+        <p>Total Archived Teachers</p>
+        <h2 id="archivedTeacherCount">—</h2>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div style="margin-bottom:14px;">
+      <input
+        type="text"
+        id="searchArchivedTeachers"
+        placeholder="🔍 Search by name or PRC ID..."
+        onkeyup="filterArchivedTeachers()"
+        style="padding:9px 12px; border:1.5px solid #ddd;
+          border-radius:8px; font-size:13px; min-width:260px;
+          outline:none;">
+    </div>
+
+    <!-- BULK ACTION BAR -->
+    <div style="display:flex; gap:10px; align-items:center;
+      flex-wrap:wrap; margin-bottom:14px; padding:12px 16px;
+      background:#fff8f0; border:1px solid #f0d0b0;
+      border-radius:8px;">
+
+      <span id="selectedArchivedTeacherCount"
+        style="font-weight:bold; color:#800000; font-size:13px;">
+      </span>
+
+      <button
+        id="bulkRestoreTeacherBtn"
+        onclick="bulkRestoreTeachers()"
+        disabled
+        style="padding:9px 16px; background:#007700; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        ♻ Restore Selected
+      </button>
+
+      <button
+        id="bulkDeleteArchivedTeacherBtn"
+        onclick="bulkDeleteArchivedTeachers()"
+        disabled
+        style="padding:9px 16px; background:#cc0000; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        🗑 Permanently Delete
+      </button>
+
+      <span style="font-size:12px; color:gray;">
+        ⚠ Permanent delete cannot be undone
+      </span>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px; text-align:center;">
+              <input type="checkbox"
+                id="selectAllArchivedTeachers"
+                onchange="toggleSelectAllArchivedTeachers()"
+                style="width:16px; height:16px; cursor:pointer;">
+            </th>
+            <th>PRC ID</th>
+            <th>Full Name</th>
+            <th>Account Status</th>
+            <th>Archive Reason</th>
+            <th>Archived On</th>
+          </tr>
+        </thead>
+        <tbody id="archivedTeacherTable">
+          <tr>
+            <td colspan="6"
+              style="text-align:center; color:gray; padding:30px;">
+              Loading...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- ==============================
+       TAB CONTENT: ARCHIVED SUBJECTS
+  ============================== -->
+  <div id="archiveMainContent-subjects" style="display:none;">
+
+    <div class="header">
+      <h2>📓 Archived Subjects</h2>
+      <p>
+        Subjects removed from active curriculum.
+        Historical grades using these subjects are preserved.
+      </p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="cards" style="margin-bottom:16px;">
+      <div class="card">
+        <p>Total Archived Subjects</p>
+        <h2 id="archivedSubjectCount">—</h2>
+      </div>
+    </div>
+
+    <!-- BULK ACTION BAR -->
+    <div style="display:flex; gap:10px; align-items:center;
+      flex-wrap:wrap; margin-bottom:14px; padding:12px 16px;
+      background:#fff8f0; border:1px solid #f0d0b0;
+      border-radius:8px;">
+
+      <span id="selectedArchivedSubjectCount"
+        style="font-weight:bold; color:#800000; font-size:13px;">
+      </span>
+
+      <button
+        id="bulkRestoreSubjectBtn"
+        onclick="bulkRestoreSubjects()"
+        disabled
+        style="padding:9px 16px; background:#007700; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        ♻ Restore Selected
+      </button>
+
+      <button
+        id="bulkDeleteArchivedSubjectBtn"
+        onclick="bulkDeleteArchivedSubjects()"
+        disabled
+        style="padding:9px 16px; background:#cc0000; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:13px; font-weight:bold; opacity:0.5;">
+        🗑 Permanently Delete
+      </button>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px; text-align:center;">
+              <input type="checkbox"
+                id="selectAllArchivedSubjects"
+                onchange="toggleSelectAllArchivedSubjects()"
+                style="width:16px; height:16px; cursor:pointer;">
+            </th>
+            <th>Subject Name</th>
+            <th>Grade Level</th>
+            <th>Archive Reason</th>
+            <th>Archived On</th>
+          </tr>
+        </thead>
+        <tbody id="archivedSubjectTable">
+          <tr>
+            <td colspan="5"
+              style="text-align:center; color:gray; padding:30px;">
+              Loading...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+      <!-- ==============================
+           SECTION: SETTINGS
+      ============================== -->
+      <div id="settingsSection" class="section">
+
+        <div class="header">
+          <h2>System Settings</h2>
+          <p>Manage school year, Semester, and system configuration</p>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="cards">
+
+          <div class="card">
+            <p>Active School Year</p>
+            <h2 id="settingsActiveYear">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Total Semester</p>
+            <h2 id="settingsTotalQuarters">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Active Semester</p>
+            <h2 id="settingsActiveQuarter">—</h2>
+          </div>
+
+          <div class="card">
+            <p>Semester Mode</p>
+            <h2 id="settingsQuarterMode">—</h2>
+          </div>
+
+        </div>
+
+        <!-- SETTINGS PANELS -->
+        <div class="settings-grid">
+
+          <!-- SCHOOL YEAR -->
+          <div class="setting-box">
+
+              <!-- NEW SCHOOL YEAR -->
+
+                <h3 style="color:#800000; margin-bottom:8px;">
+                  📅 Start New School Year
+                </h3>
+
+                <p style="color:gray; font-size:13px; margin-bottom:16px;">
+                  This will close the current active school year and start a new one.
+                  All current data is preserved and accessible in Archived Records.
+                  Students and teachers must be re-enrolled in the new year.
+                </p>
+
+                <label style="font-weight:bold; display:block; margin-bottom:6px;">
+                  New School Year Label
+                </label>
+
+                <input
+                  type="text"
+                  id="newSchoolYearLabel"
+                  placeholder="e.g. 2027-2028"
+                  style="width:100%; padding:10px; border:1.5px solid #ccc;
+                    border-radius:8px; box-sizing:border-box;
+                    font-size:14px; margin-bottom:12px;">
+
+                <p id="newSchoolYearError"
+                  style="color:red; font-size:13px; margin-bottom:10px; min-height:18px;">
+                </p>
+
+                <button onclick="startNewSchoolYear()"
+                  style="padding:11px 24px; background:#800000; color:white;
+                    border:none; border-radius:8px; cursor:pointer;
+                    font-size:14px; font-weight:bold;">
+                  🚀 Start New School Year
+                </button>
+
+          </div>
+
+          <!-- QUARTERS -->
+          <div class="setting-box">
+
+            <h3>📚 Academic Semesters</h3>
+
+            <label>Active Semester</label>
+            <select id="selectActiveQuarter"
+              style="width:100%; padding:10px; margin-bottom:12px;
+                border:1px solid #ccc; border-radius:8px;">
+              <option value="1">1st Semester</option>
+              <option value="2">2nd Semester</option>
+              <option value="3">3rd Semester</option>
+              <option value="4">4th Semester</option>
+            </select>
+
+            <label>Semester Mode</label>
+            <select id="selectQuarterMode"
+              style="width:100%; padding:10px; margin-bottom:12px;
+                border:1px solid #ccc; border-radius:8px;">
+              <option value="manual">Manual (Admin Controls)</option>
+              <option value="automatic">Automatic (Date-Based)</option>
+            </select>
+
+            <label>Total Semesters This Year</label>
+            <select id="selectTotalQuarters"
+              style="width:100%; padding:10px; margin-bottom:16px;
+                border:1px solid #ccc; border-radius:8px;">
+              <option value="3" selected>3 Semesters</option>
+              <option value="4">4 Semesters</option>
+            </select>
+
+            <button onclick="saveQuarterSettings()">
+              💾 Save Semester Settings
+            </button>
+
+          </div>
+
+          <!-- ADMIN SECURITY -->
+          <div class="setting-box">
+
+            <h3>🔐 Admin Security</h3>
+
+            <button onclick="changeAdminUsername()"
+              style="margin-bottom:10px;">
+              ✏ Change Username
+            </button>
+
+            <button onclick="changeAdminPassword()">
+              🔑 Change Password
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div><!-- end .content -->
+  </div><!-- end .main -->
+</div><!-- end .container -->
+
+
+<!-- ==============================
+     MODAL: ADD STUDENT
+============================== -->
+<div id="studentModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0, 0, 0, 0.5);
+    z-index:9999; justify-content:center; align-items:center; padding: 20px;">
+
+  <div style="background:rgb(255, 255, 255); padding:30px; border-radius:14px;
+    width:420px; max-width:92%; max-height:90vh; overflow-y:auto;">
+
+    <h3 style="color:#800000; margin-bottom:20px;">➕ Add Student</h3>
+
+    <form id="studentForm">
+
+      <label>LRN</label>
+      <input id="inputLRN" type="text"
+        placeholder="Enter LRN"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <label>Full Name</label>
+      <input id="inputName" type="text"
+        placeholder="Enter full name (e.g. Juan Dave Cruz)"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <label>Grade Level</label>
+      <select id="inputGrade"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+        <option>Grade 1</option>
+        <option>Grade 2</option>
+        <option>Grade 3</option>
+        <option>Grade 4</option>
+        <option>Grade 5</option>
+        <option>Grade 6</option>
+      </select>
+
+      <label>Section</label>
+      <select id="inputSection"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+      </select>
+
+      <label>Adviser <span style="color:gray; font-weight:normal;">(Optional)</span></label>
+      <input id="inputAdviser" type="text"
+        placeholder="Enter adviser name"
+        style="width:100%; padding:10px; margin-bottom:16px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <p style="font-size:12px; color:gray; margin-bottom:16px;">
+        ℹ Temporary password will be auto-generated from the student's name and LRN.
+        No manual password needed.
+      </p>
+
+      <p id="studentModalError"
+        style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+      <button type="button" onclick="submitStudent()"
+        style="width:100%; padding:11px; background:#800000; color:white;
+          border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+        ✅ Save Student
+      </button>
+
+      <button type="button" onclick="closeStudentModal()"
+        style="width:100%; padding:10px; background:#eee; color:#333;
+          border:none; border-radius:8px; cursor:pointer;">
+        ✖ Cancel
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- ==============================
+     MODAL: EDIT STUDENT
+============================== -->
+<div id="editStudentModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:420px; max-width:92%; max-height:90vh; overflow-y:auto;">
+
+    <h3 style="color:#800000; margin-bottom:20px;">✏ Edit Student</h3>
+
+    <label>Full Name</label>
+    <input id="editStudentName" type="text"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+    <label>Grade Level</label>
+    <select id="editStudentGrade"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      <option>Grade 1</option>
+      <option>Grade 2</option>
+      <option>Grade 3</option>
+      <option>Grade 4</option>
+      <option>Grade 5</option>
+      <option>Grade 6</option>
+    </select>
+
+    <label>Section</label>
+    <select id="editStudentSection"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+    </select>
+
+    <label>Adviser</label>
+    <input id="editStudentAdviser" type="text"
+      style="width:100%; padding:10px; margin-bottom:16px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+    <p id="editStudentError"
+      style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+    <button type="button" onclick="submitEditStudent()"
+      style="width:100%; padding:11px; background:#800000; color:white;
+        border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+      💾 Save Changes
+    </button>
+
+    <button type="button" onclick="closeEditStudentModal()"
+      style="width:100%; padding:10px; background:#eee; color:#333;
+        border:none; border-radius:8px; cursor:pointer;">
+      ✖ Cancel
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ==============================
+     MODAL: ADD TEACHER
+============================== -->
+<div id="teacherModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:400px; max-width:92%;">
+
+    <h3 style="color:#800000; margin-bottom:20px;">➕ Add Teacher</h3>
+
+    <form id="teacherForm">
+
+      <label>PRC ID</label>
+      <input id="inputPRCID" type="text"
+        placeholder="Enter PRC ID"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <label>Full Name</label>
+      <input id="inputTeacherName" type="text"
+        placeholder="Enter full name (e.g. Maria Santos)"
+        style="width:100%; padding:10px; margin-bottom:16px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <p style="font-size:12px; color:gray; margin-bottom:16px;">
+        ℹ Temporary password will be auto-generated from the teacher's name and PRC ID.
+        Assign subjects after adding.
+      </p>
+
+      <p id="teacherModalError"
+        style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+      <button type="button" onclick="submitTeacher()"
+        style="width:100%; padding:11px; background:#800000; color:white;
+          border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+        ✅ Save Teacher
+      </button>
+
+      <button type="button" onclick="closeTeacherModal()"
+        style="width:100%; padding:10px; background:#eee; color:#333;
+          border:none; border-radius:8px; cursor:pointer;">
+        ✖ Cancel
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- ==============================
+     MODAL: ASSIGN TEACHER
+     Supports multiple assignments
+============================== -->
+<div id="assignModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:480px; max-width:94%; max-height:90vh; overflow-y:auto;">
+
+    <h3 id="assignTeacherTitle"
+      style="color:#800000; margin-bottom:6px;">
+      📚 Assign Teacher
+    </h3>
+
+    <p style="color:gray; font-size:13px; margin-bottom:16px;">
+      Teachers can be assigned to multiple subjects and grade levels.
+      Add each assignment separately.
+    </p>
+
+    <!-- EXISTING ASSIGNMENTS -->
+    <div id="existingAssignmentsBox"
+      style="margin-bottom:16px; background:#f9f9f9;
+        border-radius:8px; padding:12px;">
+
+      <p style="font-size:13px; font-weight:bold;
+        color:#555; margin-bottom:8px;">
+        Current Assignments:
+      </p>
+      
+      <ul id="existingAssignmentsList"
+        style="list-style:none; padding:0; font-size:13px; color:#333;">
+        <li style="color:gray;">Loading...</li>
+      </ul>
+
+    </div>
+
+    <!-- ADD NEW ASSIGNMENT -->
+    <p style="font-size:13px; font-weight:bold;
+      color:#555; margin-bottom:10px;">
+      Add New Assignment:
+    </p>
+
+    <label>Subject</label>
+    <select id="assignSubject"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+    </select>
+
+    <label>Grade Level</label>
+    <select id="assignGrade"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      <option>Grade 1</option>
+      <option>Grade 2</option>
+      <option>Grade 3</option>
+      <option>Grade 4</option>
+      <option>Grade 5</option>
+      <option>Grade 6</option>
+    </select>
+
+    <label>Section</label>
+    <select id="assignSection"
+      style="width:100%; padding:10px; margin-bottom:16px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+    </select>
+
+    <p id="assignTeacherError"
+      style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+    <button type="button" onclick="submitAssignment()"
+      style="width:100%; padding:11px; background:#800000; color:white;
+        border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+      ➕ Add This Assignment
+    </button>
+
+    <button type="button" onclick="closeAssignModal()"
+      style="width:100%; padding:10px; background:#eee; color:#333;
+        border:none; border-radius:8px; cursor:pointer;">
+      ✖ Done
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ==============================
+     MODAL: ADD SUBJECT
+============================== -->
+<div id="subjectModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:400px; max-width:92%;">
+
+    <h3 style="color:#800000; margin-bottom:20px;">➕ Add Subject</h3>
+
+    <form id="subjectForm">
+
+      <label>Subject Name</label>
+      <input id="inputSubjectName" type="text"
+        placeholder="e.g. Mathematics"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <label>Grade Level</label>
+      <select id="inputSubjectGrade"
+        style="width:100%; padding:10px; margin-bottom:10px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+        <option>Grade 1</option>
+        <option>Grade 2</option>
+        <option>Grade 3</option>
+        <option>Grade 4</option>
+        <option>Grade 5</option>
+        <option>Grade 6</option>
+      </select>
+
+      <label>Description <span style="color:gray; font-weight:normal;">(Optional)</span></label>
+      <input id="inputSubjectDesc" type="text"
+        placeholder="Optional description"
+        style="width:100%; padding:10px; margin-bottom:16px;
+          border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+      <p id="subjectModalError"
+        style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+      <button type="button" onclick="submitSubject()"
+        style="width:100%; padding:11px; background:#800000; color:white;
+          border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+        ✅ Save Subject
+      </button>
+
+      <button type="button" onclick="closeSubjectModal()"
+        style="width:100%; padding:10px; background:#eee; color:#333;
+          border:none; border-radius:8px; cursor:pointer;">
+        ✖ Cancel
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+
+<!-- ==============================
+     MODAL: REVIEW UPLOAD
+============================== -->
+<div id="reviewModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:680px; max-width:96%; max-height:92vh; overflow-y:auto;">
+
+    <!-- HEADER -->
+    <h3 id="reviewModalTitle"
+      style="color:#800000; margin-bottom:6px; font-size:17px;">
+      Review Upload
+    </h3>
+
+    <p id="reviewModalTeacher"
+      style="color:gray; font-size:13px; margin-bottom:4px;"></p>
+
+    <!-- STATUS BADGE -->
+    <p id="reviewModalStatus"
+      style="font-size:13px; font-weight:bold; margin-bottom:16px;"></p>
+
+          <!-- TEACHER NOTE — shown if teacher left a note -->
+    <div id="reviewTeacherNote"
+      style="display:none; background:#fff8e6;
+        border:1px solid #f0d080; border-radius:8px;
+        padding:14px; margin-bottom:16px;">
+      <p style="font-size:12px; font-weight:bold;
+        color:#886600; margin-bottom:6px;">
+        📝 Teacher's Note:
+      </p>
+      <p id="reviewTeacherNoteText"
+        style="font-size:13px; color:#444; line-height:1.6; margin:0;">
+      </p>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr;
+      gap:10px; margin-bottom:20px;">
+
+      <div style="background:#f9f9f9; border-radius:8px;
+        padding:12px; text-align:center; border:1px solid #eee;">
+        <p style="font-size:11px; color:gray; margin-bottom:4px;">
+          Total Students
+        </p>
+        <p id="reviewTotalStudents"
+          style="font-size:20px; font-weight:bold; color:#333;">
+          —
+        </p>
+      </div>
+
+      <div style="background:#f0fff0; border-radius:8px;
+        padding:12px; text-align:center; border:1px solid #b0d0b0;">
+        <p style="font-size:11px; color:gray; margin-bottom:4px;">
+          Passing (≥75)
+        </p>
+        <p id="reviewPassing"
+          style="font-size:20px; font-weight:bold; color:#007700;">
+          —
+        </p>
+      </div>
+
+      <div style="background:#fff0f0; border-radius:8px;
+        padding:12px; text-align:center; border:1px solid #f0b0b0;">
+        <p style="font-size:11px; color:gray; margin-bottom:4px;">
+          Failing (&lt;75)
+        </p>
+        <p id="reviewFailing"
+          style="font-size:20px; font-weight:bold; color:#cc0000;">
+          —
+        </p>
+      </div>
+
+      <div style="background:#fff8f0; border-radius:8px;
+        padding:12px; text-align:center; border:1px solid #f0d0b0;">
+        <p style="font-size:11px; color:gray; margin-bottom:4px;">
+          School Year
+        </p>
+        <p id="reviewSchoolYear"
+          style="font-size:14px; font-weight:bold; color:#cc6600;">
+          —
+        </p>
+      </div>
+
+    </div>
+
+    <!-- GRADE TABLE -->
+    <div style="overflow-x:auto; margin-bottom:20px;">
+      <table style="width:100%; border-collapse:collapse;">
+        <thead style="background:#800000; color:white;">
+          <tr>
+            <th style="padding:10px; text-align:left;">#</th>
+            <th style="padding:10px; text-align:left;">LRN</th>
+            <th style="padding:10px; text-align:left;">Student Name</th>
+            <th style="padding:10px; text-align:left;">Final Grade</th>
+            <th style="padding:10px; text-align:left;">Remarks</th>
+          </tr>
+        </thead>
+        <tbody id="reviewGradeTable"></tbody>
+      </table>
+    </div>
+
+    <!-- REJECT REASON INPUT — shown only when rejecting -->
+    <div id="rejectReasonBox"
+      style="display:none; margin-bottom:16px;">
+      <label style="font-weight:bold; font-size:13px;
+        display:block; margin-bottom:6px;">
+        Reason for Rejection (required)
+      </label>
+      <textarea id="rejectRemarksInput" rows="3"
+        placeholder="e.g. Missing students, Wrong Semester, Incorrect grades..."
+        style="width:100%; padding:10px; border:1.5px solid #ccc;
+          border-radius:8px; box-sizing:border-box;
+          resize:vertical; font-size:13px;">
+      </textarea>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div id="reviewActionButtons"
+      style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+    </div>
+
+    <!-- CLOSE BUTTON -->
+    <button type="button" onclick="closeReviewModal()"
+      style="width:100%; padding:10px; background:#eee; color:#333;
+        border:none; border-radius:8px; cursor:pointer; font-size:14px;">
+      ✖ Close
+    </button>
+
+  </div>
+</div>
+
+<!-- ==============================
+     MODAL: NEW SCHOOL YEAR
+============================== -->
+<div id="schoolYearModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:rgb(255, 255, 255); padding:30px; border-radius:14px;
+    width:420px; max-width:92%;">
+
+    <h3 style="color:#800000; margin-bottom:8px;">
+      📅 Start New School Year
+    </h3>
+
+    <p style="color:gray; font-size:13px; margin-bottom:16px;">
+      The current school year will become inactive.
+      All previous data remains accessible in reports.
+      Teachers and students will need to be reassigned/re-enrolled
+      for the new year.
+    </p>
+
+    <label>School Year Label</label>
+    <input id="newSchoolYearLabel" type="text"
+      placeholder="e.g. 2026-2027"
+      style="width:100%; padding:10px; margin-bottom:10px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+    <label>Total Semesters</label>
+    <select id="newTotalQuarters"
+      style="width:100%; padding:10px; margin-bottom:16px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+      <option value="3" selected>3 Semester</option>
+      <option value="4">4 Semester</option>
+    </select>
+
+    <p id="schoolYearError"
+      style="color:red; font-size:13px; margin-bottom:10px;"></p>
+
+    <button type="button" onclick="submitNewSchoolYear()"
+      style="width:100%; padding:11px; background:#800000; color:white;
+        border:none; border-radius:8px; margin-bottom:8px; cursor:pointer;">
+      ✅ Confirm New School Year
+    </button>
+
+    <button type="button" onclick="closeSchoolYearModal()"
+      style="width:100%; padding:10px; background:#eee; color:#333;
+        border:none; border-radius:8px; cursor:pointer;">
+      ✖ Cancel
+    </button>
+
+  </div>
+</div>
+<!-- IMPORT STUDENTS MODAL -->
+<div id="importModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:580px; max-width:95%; max-height:92vh; overflow-y:auto;">
+
+    <h3 style="color:#800000; margin-bottom:6px;">
+      📂 Import Students from Excel
+    </h3>
+
+    <p style="color:gray; font-size:13px; margin-bottom:18px;">
+      Upload one Excel file per class. New students are registered
+      automatically. Returning students get a new enrollment record
+      for the school year.
+    </p>
+
+    <!-- FORMAT GUIDE -->
+    <div style="background:#fff5f5; border:1px solid #f0c0c0;
+      border-radius:8px; padding:14px; margin-bottom:18px; font-size:13px;">
+
+      <p style="font-weight:bold; color:#800000; margin-bottom:10px;">
+        📋 Required Excel Format
+      </p>
+
+      <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:10px;">
+        <thead>
+          <tr style="background:#800000; color:white;">
+            <th style="padding:7px 10px; text-align:left; width:35%;">Cell</th>
+            <th style="padding:7px 10px; text-align:left;">What to put</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#fafafa;">
+            <td style="padding:7px 10px; border:1px solid #eee; font-weight:bold;">B3 — School Year</td>
+            <td style="padding:7px 10px; border:1px solid #eee;">e.g. <code>2025-2026</code></td>
+          </tr>
+          <tr>
+            <td style="padding:7px 10px; border:1px solid #eee; font-weight:bold;">B4 — Grade Level</td>
+            <td style="padding:7px 10px; border:1px solid #eee;">e.g. <code>Grade 4</code> (Grade 1 to Grade 6 only)</td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:7px 10px; border:1px solid #eee; font-weight:bold;">B5 — Section</td>
+            <td style="padding:7px 10px; border:1px solid #eee;">e.g. <code>Rizal</code> or <code>A</code></td>
+          </tr>
+          <tr>
+            <td style="padding:7px 10px; border:1px solid #eee; font-weight:bold;">Row 7 — Headers</td>
+            <td style="padding:7px 10px; border:1px solid #eee;">Column A: <code>LRN</code> &nbsp; Column B: <code>Full Name</code></td>
+          </tr>
+          <tr style="background:#fafafa;">
+            <td style="padding:7px 10px; border:1px solid #eee; font-weight:bold;">Row 8 onwards</td>
+            <td style="padding:7px 10px; border:1px solid #eee;">Student LRN and Full Name — one per row</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="color:gray; font-size:12px;">
+        ℹ Empty rows are automatically skipped — no need to delete unused rows.<br>
+        ℹ One file = one class. Upload multiple files for multiple sections.
+      </p>
+
+    </div>
+
+    <!-- DOWNLOAD TEMPLATE -->
+    <a href="/assets/excel-template/student-import-template.xlsx"
+      download
+      style="display:inline-block; padding:9px 16px;
+        background:#f5f5f5; color:#800000; border:1px solid #ccc;
+        border-radius:8px; font-size:13px; font-weight:bold;
+        text-decoration:none; margin-bottom:18px;">
+      ⬇ Download Excel Template
+    </a>
+
+    <!-- FILE INPUT -->
+    <label style="font-weight:bold; display:block; margin-bottom:6px;">
+      Select Excel File (.xlsx or .xls)
+    </label>
+    <input
+      type="file"
+      id="studentImportFile"
+      accept=".xlsx,.xls"
+      style="width:100%; padding:10px; margin-bottom:16px;
+        border:1px solid #ccc; border-radius:8px; box-sizing:border-box;">
+
+    <!-- BUTTONS -->
+    <button type="button" id="importBtn" onclick="submitImport()"
+      style="width:100%; padding:11px; background:#800000; color:white;
+        border:none; border-radius:8px; margin-bottom:10px;
+        cursor:pointer; font-size:15px; font-weight:bold;">
+      📂 Import Students
+    </button>
+
+    <button type="button" onclick="closeImportModal()"
+      style="width:100%; padding:10px; background:#eee; color:#333;
+        border:none; border-radius:8px; cursor:pointer; font-size:14px;">
+      ✖ Close
+    </button>
+
+    <!-- RESULT -->
+    <div id="importResult" style="margin-top:16px;"></div>
+
+  </div>
+</div>
+
+<!-- ==============================
+     MODAL: ARCHIVE WITH REASON
+============================== -->
+<div id="archiveReasonModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:500px; max-width:95%;">
+
+    <h3 id="archiveReasonTitle"
+      style="color:#800000; margin-bottom:6px;">
+      Archive Record
+    </h3>
+
+    <p id="archiveReasonSubtitle"
+      style="color:gray; font-size:13px; margin-bottom:20px;">
+    </p>
+
+    <!-- WHO IS BEING ARCHIVED -->
+    <div id="archiveReasonNames"
+      style="background:#fff5f5; border:1px solid #f0c0c0;
+        border-radius:8px; padding:12px 14px; margin-bottom:16px;
+        font-size:13px; max-height:120px; overflow-y:auto;">
+    </div>
+
+    <!-- REASON INPUT -->
+    <label style="font-weight:bold; display:block; margin-bottom:6px;
+      font-size:13px;">
+      Reason for Archiving
+      <span style="color:gray; font-weight:normal;">
+        (optional but recommended)
+      </span>
+    </label>
+
+    <textarea
+      id="archiveReasonInput"
+      rows="3"
+      placeholder="e.g. Student transferred to another school — May 2026
+e.g. Teacher retired — June 2026
+e.g. Subject removed from curriculum revision 2026"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; font-size:13px; box-sizing:border-box;
+        resize:vertical; outline:none; line-height:1.6;">
+    </textarea>
+
+    <p style="font-size:12px; color:gray; margin:6px 0 20px;">
+      ℹ This reason will be visible in Archived Records for future reference.
+    </p>
+
+    <!-- BUTTONS -->
+    <div style="display:flex; gap:10px;">
+
+      <button
+        id="archiveReasonConfirmBtn"
+        onclick="confirmArchiveWithReason()"
+        style="flex:1; padding:11px; background:#800000; color:white;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:14px; font-weight:bold;">
+        🗄 Confirm Archive
+      </button>
+
+      <button
+        onclick="closeArchiveReasonModal()"
+        style="flex:1; padding:11px; background:#eee; color:#333;
+          border:none; border-radius:8px; cursor:pointer;
+          font-size:14px;">
+        ✖ Cancel
+      </button>
+
+    </div>
+
+  </div>
+</div>
+<!-- ==============================
+     MODAL: CHANGE ADMIN CREDENTIALS
+============================== -->
+<div id="changeCredentialsModal"
+  style="display:none; position:fixed; top:0; left:0;
+    width:100%; height:100%; background:rgba(0,0,0,0.5);
+    z-index:9999; justify-content:center; align-items:center;">
+
+  <div style="background:white; padding:30px; border-radius:14px;
+    width:460px; max-width:95%;">
+
+    <h3 style="color:#800000; margin-bottom:6px;">
+      🔑 Change Admin Credentials
+    </h3>
+
+    <p style="color:gray; font-size:13px; margin-bottom:20px;">
+      You will be logged out after saving changes.
+    </p>
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      Current Password
+    </label>
+    <input type="password" id="adminCurrentPassword"
+      placeholder="Enter your current password"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:16px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <hr style="border:none; border-top:1px solid #eee; margin-bottom:16px;">
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      New Username
+      <span style="color:gray; font-weight:normal;">
+        (leave blank to keep current)
+      </span>
+    </label>
+    <input type="text" id="adminNewUsername"
+      placeholder="New username"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:16px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <label style="font-weight:bold; font-size:13px;
+      display:block; margin-bottom:6px;">
+      New Password
+      <span style="color:gray; font-weight:normal;">
+        (leave blank to keep current)
+      </span>
+    </label>
+    <input type="password" id="adminNewPassword"
+      placeholder="New password (min 6 characters)"
+      style="width:100%; padding:10px; border:1.5px solid #ddd;
+        border-radius:8px; margin-bottom:6px;
+        box-sizing:border-box; font-size:13px; outline:none;">
+
+    <p id="changeCredentialsError"
+      style="color:red; font-size:13px; margin-bottom:16px; min-height:18px;">
+    </p>
+
+    <button onclick="submitChangeCredentials()"
+      style="width:100%; padding:11px; background:#800000;
+        color:white; border:none; border-radius:8px;
+        cursor:pointer; font-size:14px; font-weight:bold;
+        margin-bottom:10px;">
+      💾 Save Changes
+    </button>
+
+    <button onclick="closeChangeCredentialsModal()"
+      style="width:100%; padding:10px; background:#eee;
+        color:#333; border:none; border-radius:8px;
+        cursor:pointer; font-size:14px;">
+      ✖ Cancel
+    </button>
+
+  </div>
+</div>
+<!-- ==============================
+     SCRIPTS
+     api.js must load before admin.js
+============================== -->
+<script src="../JS/api.js"></script>
+<script src="../JS/admin.js"></script>
+
+</body>
+</html>
